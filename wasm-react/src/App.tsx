@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
-import init, { WordCollection } from "./pkg/wasm_rust_sum"; // Importa o módulo WASM
+import init, {AlgumaEstrutura} from "./pkg/wasm_rust_sum"; // Importa o módulo WASM
+
+const estruturaArray = [
+  { chave1: "chave1_1", chave2: "chave2_1", valor1: "valor1_1", valor2: "valor2_1" },
+  { chave1: "chave1_1", chave2: "chave2_2", valor1: "valor1_2", valor2: "valor2_2" },
+  { chave1: "chave1_2", chave2: "chave2_1", valor1: "valor1_3", valor2: "valor2_3" },
+];
+
 
 const App = () => {
-  const [words, setWords] = useState<string[]>([]);
   const [displayText, setDisplayText] = useState<string>("");
   
   useEffect(() =>  {
@@ -12,29 +18,22 @@ const App = () => {
     // Agora podemos usar as funcionalidades
   })}, []);
 
-  const handleAddWord = (event: React.FormEvent) => {
-    event.preventDefault();
-    const input = (event.target as HTMLFormElement).word.value;
-    if (input.trim() !== "") {
-      setWords([...words, input.trim()]);
-    }
-    (event.target as HTMLFormElement).reset();
+  const handleShowStruct = () => {
+    const struct = new AlgumaEstrutura(estruturaArray);
+    setDisplayText(struct.mostrar_dados());
   };
 
-  const handleGenerateText = () => {
-    const wordCollection = new WordCollection(words);
-    setDisplayText(wordCollection.display_words());
-  };
+  const handleClean = () => {
+    setDisplayText("");
+  }
 
   return (
     <div>
       <h1>WASM + React</h1>
-      <form onSubmit={handleAddWord}>
-        <input type="text" name="word" placeholder="Digite uma palavra" />
-        <button type="submit">Adicionar</button>
-      </form>
-      <button onClick={handleGenerateText}>Mostrar palavras</button>
-      <p>Palavras: {displayText}</p>
+
+      <button onClick={handleShowStruct}>Mostrar estrutura</button>
+      <button onClick={handleClean}>Limpar</button>
+      <p>Estrutura: {displayText}</p>
     </div>
   );
 };
